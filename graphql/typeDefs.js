@@ -8,6 +8,10 @@ module.exports = gql`
     username: String!
     createdAt: String!
   }
+  type Notification {
+    email: String!
+    message: String!
+  }
   input RegisterInput {
     username: String!
     password: String!
@@ -18,6 +22,8 @@ module.exports = gql`
     register(registerInput: RegisterInput): User!
     login(username: String!, password: String!): User!
     resetPassword(username: String!, currentPassword: String!, newPassword: String!): User!
+    forgotPassword(username: String!, email: String!): Notification!
+    forgotPassword1(username: String!, email: String!): User!
   }
   
   type Query{

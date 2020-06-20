@@ -60,3 +60,14 @@ module.exports.validateResetPasswordInput = (username, currentPassword, newPassw
         valid: Object.keys(errors).length < 1
     };
 };
+
+module.exports.validateForgotPasswordInput = (username, email) => {
+    const errors = {};
+    if (username.trim() === '' && email.trim() === '') {
+        errors.user = 'At least one from Username and Email must not be empty';
+    }
+    return {
+        errors,
+        valid: Object.keys(errors).length < 1
+    };
+};
