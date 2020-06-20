@@ -4,7 +4,8 @@ const {UserInputError} = require('apollo-server');
 
 const {
     validateRegisterInput,
-    validateLoginInput
+    validateLoginInput,
+    validateResetPasswordInput
 } = require('../../util/validators');
 const {SECRET_KEY} = require('../../config');
 const User = require('../../models/User');
@@ -95,6 +96,35 @@ module.exports = {
                 id: res._id,
                 token
             };
-        }
+        },
+        async resetPassword(_, {username, currentPassword, newPassword}) {
+            const {errors, valid} = validateResetPasswordInput(username, currentPassword, newPassword);
+
+            if (!valid) {
+                throw new UserInputError('Errors', {errors});
+            }
+
+            const user = await User.findOne({username});
+
+            if (!user) {
+                errors.general = 'User not found';
+                throw new UserInputError('User not found', {errors});
+            }
+
+            const match = await bcrypt.compare(currentPassword, user.password);
+            if (!match) {
+                errors.general = 'Wrong crendetials';
+                throw new UserInputError('Wrong crendetials', {errors});
+            }
+            user.password = await bcrypt.hash(newPassword, 12);
+            user.save();
+            const token = generateToken(user);
+
+            return {
+                ...user._doc,
+                id: user._id,
+                token
+            };
+        },
     }
 };

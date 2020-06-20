@@ -17,6 +17,7 @@ module.exports = gql`
   type Mutation {
     register(registerInput: RegisterInput): User!
     login(username: String!, password: String!): User!
+    resetPassword(username: String!, currentPassword: String!, newPassword: String!): User!
   }
   
   type Query{
