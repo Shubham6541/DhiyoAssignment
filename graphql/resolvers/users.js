@@ -5,7 +5,8 @@ const {UserInputError} = require('apollo-server');
 const {
     validateRegisterInput,
     validateLoginInput,
-    validateResetPasswordInput
+    validateResetPasswordInput,
+    validateForgotPasswordInput
 } = require('../../util/validators');
 const {SECRET_KEY} = require('../../config');
 const User = require('../../models/User');
@@ -25,6 +26,7 @@ function generateToken(user) {
 module.exports = {
     Mutation: {
         async login(_, {username, password}) {
+            console.log(username, password);
             const {errors, valid} = validateLoginInput(username, password);
 
             if (!valid) {
@@ -97,6 +99,7 @@ module.exports = {
                 token
             };
         },
+
         async resetPassword(_, {username, currentPassword, newPassword}) {
             const {errors, valid} = validateResetPasswordInput(username, currentPassword, newPassword);
 
@@ -124,6 +127,28 @@ module.exports = {
                 ...user._doc,
                 id: user._id,
                 token
+            };
+        },
+
+        async forgotPassword(_, {username, email}) {
+            const {errors, valid} = validateForgotPasswordInput(username, email);
+            if (!valid) {
+                throw new UserInputError('Errors', {errors});
+            }
+            let user;
+            if (username) {
+                user = await User.findOne({username});
+            } else {
+                user = await User.findOne({email});
+            }
+
+            if (!user) {
+                errors.general = 'User not found';
+                throw new UserInputError('User not found', {errors});
+            }
+            return {
+                message: "Email Sent",
+                email: user.email
             };
         },
     }
