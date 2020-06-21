@@ -17,6 +17,8 @@
     "express": "^4.17.1",
     "express-graphql": "^0.9.0",
     "graphql": "^15.1.0",
+    "graphql-tools": "^6.0.10",
+    "graphql-upload": "^11.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.19",
     "shortid": "^2.2.15",

@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const gql = require('graphql-tag');
 const express = require('express');
 const graphqlHttp = require('express-graphql');
+const {graphqlUploadExpress} = require('graphql-upload');
 
 const typeDefs = require('./graphql/typeDefs');
 const resolvers = require('./graphql/resolvers');
@@ -16,6 +17,7 @@ app.use(bodyParser.json());
 
 app.use(
     '/graphql',
+    graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }),
     graphqlHttp({
         schema: graphQlSchema,
         rootValue: graphQlResolvers,

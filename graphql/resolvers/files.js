@@ -1,5 +1,5 @@
 const shortid = require('shortid')
-const { createWriteStream, mkdir } = require( "fs");
+const { createWriteStream, createReadStream, mkdir } = require( "fs");
 
 const File = require('../../models/File');
 
@@ -16,8 +16,8 @@ const storeUpload = async ({ stream, filename, mimetype }) => {
 };
 
 const processUpload = async upload => {
-    const { createReadStream, filename, mimetype } = await upload;
-    const stream = createReadStream();
+    const { createReadStream,filename, mimetype } = await upload;
+    const stream = await createReadStream();
     const file = await storeUpload({ stream, filename, mimetype });
     return file;
 };
@@ -27,13 +27,13 @@ module.exports =  {
         hello: () => "Hello world"
     },
     Mutation: {
-         async uploadFile(_, { file })  {
-            console.log("HI")
+         async uploadFile( { file })  {
+
             mkdir("images", { recursive: true }, err => {
                 if (err) throw err;
             });
 
-            const upload = await processUpload(file);
+            const upload = await processUpload(file.file);
             await File.create(upload);
             return upload;
         }

@@ -1,6 +1,7 @@
 const { buildSchema } = require('graphql');
 
 module.exports = buildSchema(`
+  scalar Upload
   type User {
     id: ID!
     email: String!
@@ -29,7 +30,7 @@ module.exports = buildSchema(`
     login(username: String!, password: String!): User!
     resetPassword(username: String!, currentPassword: String!, newPassword: String!): User!
     forgotPassword(username: String!, email: String!): Notification!
-    
+    uploadFile(file: Upload!): File!
   }
   
   type RootQuery{
