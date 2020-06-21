@@ -25,7 +25,7 @@ function generateToken(user) {
 
 module.exports = {
     Mutation: {
-        async login(_, {username, password}) {
+        async login({username, password}) {
             console.log(username, password);
             const {errors, valid} = validateLoginInput(username, password);
 
@@ -55,7 +55,7 @@ module.exports = {
             };
         },
         async register(
-            _,
+
             {
                 registerInput: {username, email, password, confirmPassword}
             }
@@ -100,7 +100,7 @@ module.exports = {
             };
         },
 
-        async resetPassword(_, {username, currentPassword, newPassword}) {
+        async resetPassword({username, currentPassword, newPassword}) {
             const {errors, valid} = validateResetPasswordInput(username, currentPassword, newPassword);
 
             if (!valid) {
@@ -130,7 +130,7 @@ module.exports = {
             };
         },
 
-        async forgotPassword(_, {username, email}) {
+        async forgotPassword( {username, email}) {
             const {errors, valid} = validateForgotPasswordInput(username, email);
             if (!valid) {
                 throw new UserInputError('Errors', {errors});
@@ -146,6 +146,7 @@ module.exports = {
                 errors.general = 'User not found';
                 throw new UserInputError('User not found', {errors});
             }
+
             return {
                 message: "Email Sent",
                 email: user.email
