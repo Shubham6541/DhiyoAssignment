@@ -1,5 +1,5 @@
 const shortid = require('shortid')
-const {createWriteStream, mkdir} = require("fs");
+const {createWriteStream, mkdir} = require('fs');
 
 const File = require('../../models/File');
 const User = require('../../models/User');

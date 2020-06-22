@@ -1,12 +1,7 @@
 const bcrypt = require('bcryptjs');
 const {UserInputError} = require('apollo-server');
 const generateToken = require('../../util/generateToken');
-const {
-    validateRegisterInput,
-    validateLoginInput,
-    validateResetPasswordInput,
-    validateForgotPasswordInput
-} = require('../../util/validators');
+const { validateRegisterInput, validateLoginInput, validateResetPasswordInput, validateForgotPasswordInput} = require('../../util/validators');
 const forgotPasswordResponse = require('../../util/forgetPasswordResponse');
 const User = require('../../models/User');
 

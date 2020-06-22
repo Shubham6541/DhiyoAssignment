@@ -7,4 +7,4 @@ const fileSchema = new Schema({
     file: {data: Buffer}
 });
 
-module.exports = model("File", fileSchema);
+module.exports = model('File', fileSchema);

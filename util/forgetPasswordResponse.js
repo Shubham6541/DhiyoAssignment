@@ -16,7 +16,7 @@ const forgotPasswordResponse = async (username, email) => {
     updateUser(username, token);
     const message = 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
         'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-        'https://dhiyo.herokuapp.com/api/reset/' + token + '\n\n' +
+        'http://localhost:8080/api/reset/' + token + '\n\n' +
         'If you did not request this, please ignore this email and your password will remain unchanged.\n';
     const subject = 'Password Reset for Dhiyo application';
     return await sendMail(email, subject, message);
