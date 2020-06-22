@@ -1,4 +1,5 @@
 const express = require("express");
+const bcrypt = require("bcryptjs");
 const router = express.Router();
 const User = require('../models/User');
 const sendMail = require('../util/sendMail');
@@ -9,7 +10,7 @@ const resetPasswordResponse = async (req, res) => {
         if (!user) {
             res.json({message: 'Password reset token is invalid or has expired.'});
         } else {
-            fs.readFile("views/resetpassword.html", function (error, data) {
+            fs.readFile("views/resetPassword.html", function (error, data) {
                 if (error) {
                     res.writeHead(404);
                     res.write('Contents you are looking are Not Found');
@@ -24,15 +25,22 @@ const resetPasswordResponse = async (req, res) => {
 
 const setPasswordResponseMail = async (req, res) => {
     const searchQuery = {resetPasswordToken: req.params.token};
-    const updatedValues = { $set: {password: await bcrypt.hash(req.params.password,12),resetPasswordToken: undefined, resetPasswordExpires: undefined, modifiedDate : Date(Date.now()) }};
+    const updatedValues = {
+        $set: {
+            password: await bcrypt.hash(req.params.password, 12),
+            resetPasswordToken: undefined,
+            resetPasswordExpires: undefined,
+            modifiedDate: Date(Date.now())
+        }
+    };
 
-    User.findOneAndUpdate(searchQuery, updatedValues, (err, user)=>{
+    User.findOneAndUpdate(searchQuery, updatedValues, (err, user) => {
         console.log(user.email);
-        if(err) throw err;
+        if (err) throw err;
         const subject = 'Password Updated';
         const message = 'Hi, \n' +
             '\'This is a confirmation that the password for your account \'' + user.email + '\' has just been changed.\\n\''
-        sendMail(email, subject, message);
+        sendMail(user.email, subject, message);
         res.send({status: 'success', message: 'Success! Your password has been changed.'});
     });
 }

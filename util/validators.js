@@ -21,7 +21,6 @@ module.exports.validateRegisterInput = (
     } else if (password !== confirmPassword) {
         errors.confirmPassword = 'Passwords must match';
     }
-
     return {
         errors,
         valid: Object.keys(errors).length < 1
@@ -36,7 +35,6 @@ module.exports.validateLoginInput = (username, password) => {
     if (password.trim() === '') {
         errors.password = 'Password must not be empty';
     }
-
     return {
         errors,
         valid: Object.keys(errors).length < 1
@@ -54,7 +52,6 @@ module.exports.validateResetPasswordInput = (username, currentPassword, newPassw
     if (newPassword.trim() === '') {
         errors.newPassword = 'New Password must not be empty';
     }
-
     return {
         errors,
         valid: Object.keys(errors).length < 1

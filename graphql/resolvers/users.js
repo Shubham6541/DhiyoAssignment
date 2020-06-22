@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const {UserInputError} = require('apollo-server');
-
+const generateToken = require('../../util/generateToken');
 const {
     validateRegisterInput,
     validateLoginInput,
@@ -9,59 +8,35 @@ const {
     validateForgotPasswordInput
 } = require('../../util/validators');
 const forgotPasswordResponse = require('../../util/forgetPasswordResponse');
-const {SECRET_KEY} = require('../../config');
 const User = require('../../models/User');
-
-function generateToken(user) {
-    return jwt.sign(
-        {
-            id: user.id,
-            email: user.email,
-            username: user.username
-        },
-        SECRET_KEY,
-        {expiresIn: '1h'}
-    );
-}
 
 module.exports = {
     Mutation: {
-        async login({username, password}) {
+        login: async ({username, password}) => {
             console.log(username, password);
             const {errors, valid} = validateLoginInput(username, password);
-
             if (!valid) {
                 throw new UserInputError('Errors', {errors});
             }
-
             const user = await User.findOne({username});
-
             if (!user) {
                 errors.general = 'User not found';
                 throw new UserInputError('User not found', {errors});
             }
-
             const match = await bcrypt.compare(password, user.password);
             if (!match) {
-                errors.general = 'Wrong crendetials';
-                throw new UserInputError('Wrong crendetials', {errors});
+                errors.general = 'Wrong credentials';
+                throw new UserInputError('Wrong credentials', {errors});
             }
-
             const token = generateToken(user);
-
             return {
                 ...user._doc,
                 id: user._id,
-                token
+                token,
             };
         },
-        async register(
 
-            {
-                registerInput: {username, email, password, confirmPassword}
-            }
-        ) {
-            // Validate user data
+        register: async ({registerInput: {username, email, password, confirmPassword}}) => {
             const {valid, errors} = validateRegisterInput(
                 username,
                 email,
@@ -80,20 +55,15 @@ module.exports = {
                     }
                 });
             }
-            // hash password and create an auth token
             password = await bcrypt.hash(password, 12);
-
             const newUser = new User({
                 email,
                 username,
                 password,
                 createdAt: new Date().toISOString()
             });
-
             const res = await newUser.save();
-
             const token = generateToken(res);
-
             return {
                 ...res._doc,
                 id: res._id,
@@ -101,20 +71,16 @@ module.exports = {
             };
         },
 
-        async resetPassword({username, currentPassword, newPassword}) {
+        resetPassword: async ({username, currentPassword, newPassword}) => {
             const {errors, valid} = validateResetPasswordInput(username, currentPassword, newPassword);
-
             if (!valid) {
                 throw new UserInputError('Errors', {errors});
             }
-
             const user = await User.findOne({username});
-
             if (!user) {
                 errors.general = 'User not found';
                 throw new UserInputError('User not found', {errors});
             }
-
             const match = await bcrypt.compare(currentPassword, user.password);
             if (!match) {
                 errors.general = 'Wrong crendetials';
@@ -123,7 +89,6 @@ module.exports = {
             user.password = await bcrypt.hash(newPassword, 12);
             user.save();
             const token = generateToken(user);
-
             return {
                 ...user._doc,
                 id: user._id,
@@ -131,7 +96,7 @@ module.exports = {
             };
         },
 
-        async forgotPassword( {username, email}) {
+        forgotPassword: async ({username, email}) => {
             const {errors, valid} = validateForgotPasswordInput(username, email);
             if (!valid) {
                 throw new UserInputError('Errors', {errors});

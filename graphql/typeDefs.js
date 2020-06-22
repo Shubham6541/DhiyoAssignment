@@ -1,4 +1,4 @@
-const { buildSchema } = require('graphql');
+const {buildSchema} = require('graphql');
 
 module.exports = buildSchema(`
   scalar Upload
@@ -34,7 +34,7 @@ module.exports = buildSchema(`
   }
   
   type RootQuery{
-  getUser(username:String!): User!
+    getUser(username:String!): User!
   }
   schema {
     query: RootQuery

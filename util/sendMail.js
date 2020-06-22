@@ -12,24 +12,22 @@ const transporter = nodeMailer.createTransport({
     }
 });
 
-const sendMail = function (userEmail, subject, message) {
+const sendMail = async (userEmail, subject, message) => {
     const mailOptions = {
         from: 'kumarshub6541@gmail.com',
         to: userEmail,
         subject: subject,
         text: message
     };
-    transporter.sendMail(mailOptions, function (error, info) {
+
+    await transporter.sendMail(mailOptions, async (error, info) => {
         if (error) {
-            return {
-                message: "Email can not be sent",
-                errorMessage: error
-            };
+            return {message: "Registered email id was not valid"};
         } else {
             console.log('Email sent: ' + info.response);
             return {message: "Email sent to your registered email address"};
         }
     });
+    return {message: "Email sent to your registered email address"};
 }
-
 module.exports = sendMail;

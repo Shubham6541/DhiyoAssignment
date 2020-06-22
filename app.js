@@ -13,17 +13,19 @@ const graphQlSchema = require('./graphql/typeDefs');
 const graphQlResolvers = require('./graphql/resolvers/index');
 const Router = require('./routes/user-router')
 app.use(bodyParser.json());
-app.use(session({ cookie: { maxAge: 60000 },
+app.use(session({
+    cookie: {maxAge: 60000},
     secret: 'woot',
     resave: false,
-    saveUninitialized: false}));
+    saveUninitialized: false
+}));
 app.use(flash());
 app.use(Authorization);
 
 app.use("/api", Router);
 app.use(
     '/graphql',
-    graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }),
+    graphqlUploadExpress({maxFileSize: 10000000, maxFiles: 10}),
     graphqlHttp({
         schema: graphQlSchema,
         rootValue: graphQlResolvers,
@@ -35,10 +37,10 @@ mongoose
     .connect(MONGODB, {useNewUrlParser: true})
     .then(() => {
         console.log('MongoDB Connected');
-        return app.listen( 5000);
+        return app.listen(5000);
     })
     .then((res) => {
         console.log(`Server running at ${res.url}`);
-    }).catch(err=> {
-        console.log(err);
+    }).catch(err => {
+    console.log(err);
 });
