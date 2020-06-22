@@ -1,12 +1,12 @@
+const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const express = require('express');
 const session = require('express-session');
 const graphqlHttp = require('express-graphql');
 const {graphqlUploadExpress} = require('graphql-upload');
 const {MONGODB} = require('./config.js');
 const Authorization = require('./middleware/authorization');
-
+const PORT = process.env.PORT || 8080;
 const app = express();
 const flash = require("connect-flash");
 const graphQlSchema = require('./graphql/typeDefs');
@@ -37,7 +37,7 @@ mongoose
     .connect(MONGODB, {useNewUrlParser: true})
     .then(() => {
         console.log('MongoDB Connected');
-        return app.listen(5000);
+        return app.listen(PORT);
     })
     .then((res) => {
         console.log(`Server running at ${res.url}`);
