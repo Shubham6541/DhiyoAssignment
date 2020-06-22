@@ -25,7 +25,7 @@ const processUpload = async upload => {
 
 module.exports = {
     Mutation: {
-        async uploadFile({file}, req) {
+        uploadFile: async ({file}, req) => {
             if (!req.isAuth) {
                 throw new Error('Unauthenticated!');
             }

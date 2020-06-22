@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const graphqlHttp = require('express-graphql');
 const {graphqlUploadExpress} = require('graphql-upload');
+const fs = require("fs");
 const {MONGODB} = require('./config.js');
 const Authorization = require('./middleware/authorization');
 const PORT = process.env.PORT || 8080;
@@ -21,6 +22,17 @@ app.use(session({
 }));
 app.use(flash());
 app.use(Authorization);
+app.get("/", (req, res) => {
+    fs.readFile("views/welcomePage.html", function (error, data) {
+        if (error) {
+            res.writeHead(404);
+            res.write('Contents you are looking are Not Found');
+        } else {
+            res.write(data);
+        }
+        res.end();
+    });
+});
 
 app.use("/api", Router);
 app.use(
