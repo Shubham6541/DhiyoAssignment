@@ -27,14 +27,17 @@ module.exports =  {
         hello: () => "Hello world"
     },
     Mutation: {
-         async uploadFile( { file })  {
-
+         async uploadFile( { file },req)  {
+             if (!req.isAuth) {
+                 throw new Error('Unauthenticated!');
+             }
             mkdir("images", { recursive: true }, err => {
                 if (err) throw err;
             });
-
+            console.log(req.username)
             const upload = await processUpload(file.file);
             await File.create(upload);
+            upload.username = req.username;
             return upload;
         }
     }

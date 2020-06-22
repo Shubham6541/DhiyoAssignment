@@ -18,6 +18,7 @@ module.exports = buildSchema(`
     filename: String!
     mimetype: String!
     path: String!
+    username: String!
   }
   input RegisterInput {
     username: String!
