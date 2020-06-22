@@ -73,7 +73,6 @@ Reset Password
    mutation{
      forgotPassword(username:"",email:"kumarshubham6541@gmail.com"){
        message
-       email
      }
    }
     ```
