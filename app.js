@@ -1,19 +1,24 @@
-const {ApolloServer} = require('apollo-server');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const gql = require('graphql-tag');
 const express = require('express');
+const session = require('express-session');
 const graphqlHttp = require('express-graphql');
 const {graphqlUploadExpress} = require('graphql-upload');
-
-const typeDefs = require('./graphql/typeDefs');
-const resolvers = require('./graphql/resolvers');
 const {MONGODB} = require('./config.js');
 
 const app = express();
+const flash = require("connect-flash");
 const graphQlSchema = require('./graphql/typeDefs');
 const graphQlResolvers = require('./graphql/resolvers/index');
+const Router = require('./routes/user-router')
 app.use(bodyParser.json());
+app.use(session({ cookie: { maxAge: 60000 },
+    secret: 'woot',
+    resave: false,
+    saveUninitialized: false}));
+app.use(flash());
+
+app.use("/api", Router);
 
 app.use(
     '/graphql',
