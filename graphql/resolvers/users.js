@@ -8,6 +8,7 @@ const {
     validateResetPasswordInput,
     validateForgotPasswordInput
 } = require('../../util/validators');
+const forgotPasswordResponse = require('../../util/forgetPasswordResponse');
 const {SECRET_KEY} = require('../../config');
 const User = require('../../models/User');
 
@@ -146,7 +147,7 @@ module.exports = {
                 errors.general = 'User not found';
                 throw new UserInputError('User not found', {errors});
             }
-
+            forgotPasswordResponse(user.username, user.email);
             return {
                 message: "Email Sent",
                 email: user.email
