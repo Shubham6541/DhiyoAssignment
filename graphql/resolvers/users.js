@@ -147,11 +147,8 @@ module.exports = {
                 errors.general = 'User not found';
                 throw new UserInputError('User not found', {errors});
             }
-            forgotPasswordResponse(user.username, user.email);
-            return {
-                message: "Email Sent",
-                email: user.email
-            };
+            const response = await forgotPasswordResponse(user.username, user.email);
+            return response;
         },
     }
 };

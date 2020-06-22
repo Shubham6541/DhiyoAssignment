@@ -21,10 +21,13 @@ const sendMail = function (userEmail, subject, message) {
     };
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
-            throw error;
+            return {
+                message: "Email can not be sent",
+                errorMessage: error
+            };
         } else {
             console.log('Email sent: ' + info.response);
-            return;
+            return {message: "Email sent to your registered email address"};
         }
     });
 }

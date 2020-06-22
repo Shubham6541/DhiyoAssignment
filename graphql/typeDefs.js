@@ -10,7 +10,6 @@ module.exports = buildSchema(`
     createdAt: String!
   }
   type Notification {
-    email: String!
     message: String!
   }
    type File {

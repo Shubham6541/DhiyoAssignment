@@ -19,8 +19,8 @@ const forgotPasswordResponse = async (username, email) => {
         'http://' + 'localhost:5000/api' + '/reset/' + token + '\n\n' +
         'If you did not request this, please ignore this email and your password will remain unchanged.\n';
     const subject = 'Password Reset for Dhiyo application';
-    sendMail(email, subject, message);
-
+    const mailStatus = await sendMail(email, subject, message);
+    return  mailStatus;
 }
 
 module.exports = forgotPasswordResponse;
